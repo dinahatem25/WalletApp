@@ -1,0 +1,44 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+.centered-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Adjust the height as needed */
+}
+
+/* Add margin to the top of the card to push it down */
+.user-list-card {
+  max-width: 800px; /* Adjust the width as needed */
+  width: 100%;
+  padding: 20px;
+  margin-top: 300px; /* Adjust the margin-top value as needed */
+}
+
+/* Add these styles to adjust the padding and margin inside the Card */
+
+
+.user-list-card .ant-card-body {
+  padding: 0 16px;
+}
+/* Adjust the padding for the first element and title */
+.user-list-card .ant-card-grid {
+  padding: 16px;
+}
+
+/* Adjust the margin for the title */
+.user-list-card .ant-card-head {
+  margin-bottom: 0;
+}
+

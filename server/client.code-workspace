@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"name": "client",
+			"path": "../../../models/client"
+		},
+		{
+			"name": "Server",
+			"path": "../../../models/Server"
+		},
+		{
+			"name": "wallet-app",
+			"path": ".."
+		}
+	],
+	"settings": {}
+}
