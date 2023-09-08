@@ -1,22 +1,20 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Card, Input, Button } from 'antd';
 
 const EditPage = () => {
-  const { id } = useParams(); // Get the index from the URL parameter
-  const [adjustmentAmount, setAdjustmentAmount] = useState(0); // State variable to hold user input
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [adjustmentAmount, setAdjustmentAmount] = useState(0);
 
   const handleInputChange = (e) => {
-    // Update the state variable when the user enters input
     setAdjustmentAmount(Number(e.target.value));
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    
-    // Make an HTTP POST request to the API endpoint
+
     try {
-      console.log(adjustmentAmount);
       const response = await fetch('http://localhost:3000/api/adjust-balance', {
         method: 'POST',
         headers: {
@@ -30,10 +28,11 @@ const EditPage = () => {
 
       if (response.ok) {
         const data = await response.json();
-        // Handle success, e.g., show a success message or update the UI
         console.log(data.message);
+
+        // Reload the homepage and navigate back to it
+        window.location.href = '/';
       } else {
-        // Handle error response from the API
         console.error('Error:', response.statusText);
       }
     } catch (error) {
@@ -47,7 +46,7 @@ const EditPage = () => {
         <form onSubmit={handleFormSubmit}>
           <Input
             type="number"
-            placeholder="Edit your item here"
+            placeholder="Enter adjustment amount"
             value={adjustmentAmount}
             onChange={handleInputChange}
           />

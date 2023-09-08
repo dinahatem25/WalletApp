@@ -1,26 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-const TransactionsPage = () => {
-  const { id } = useParams().id; // Get the index from the URL parameter
+const TransactionPage = () => {
+  const { id } = useParams();
   const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
-    // Make an HTTP GET request to the API endpoint
     const fetchTransactions = async () => {
-        try {
-          const response = await fetch(`http://localhost:3000/api/transactions?id=${id}`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            }
-          });
-      
-          // ... rest of your code ...
-        } catch (error) {
-          console.error('Error retrieving transactions:', error);
+      try {
+        const response = await fetch(`http://localhost:3000/api/transactions?id=${id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setTransactions(data);
+        } else {
+          console.error('Error retrieving transactions:', response.statusText);
         }
-      };
+      } catch (error) {
+        console.error('Error retrieving transactions:', error);
+      }
+    };
 
     fetchTransactions();
   }, [id]);
@@ -31,7 +35,6 @@ const TransactionsPage = () => {
       <ul>
         {transactions.map((transaction) => (
           <li key={transaction._id}>
-            {/* Render transaction data here */}
             Transaction ID: {transaction._id}, Amount: {transaction.amount}
           </li>
         ))}
@@ -40,4 +43,4 @@ const TransactionsPage = () => {
   );
 };
 
-export default TransactionsPage;
+export default TransactionPage;

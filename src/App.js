@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import './index.css';
-import { Avatar, Button, List, Skeleton, Card } from 'antd';
-import { BrowserRouter as Router, Route, Link, Routes, Navigate } from 'react-router-dom'; // Import React Router components
-import EditPage from './EditPage'; // Correct the import path
-import Transaction from './TransactionPage';
+import { Button, Card, List, Skeleton } from 'antd';
+import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
+import EditPage from './EditPage';
+import TransactionPage from './TransactionPage';
 
-const initialCount = 3; // Number of initial entries to fetch
-const dataUrl = `http://localhost:3000/api/users`;
+const initialCount = 3;
+const dataUrl = 'http://localhost:3000/api/users';
 
 const App = () => {
   const [initLoading, setInitLoading] = useState(true);
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState([]);
   const [list, setList] = useState([]);
-  const [offset, setOffset] = useState(0); // Keep track of the offset for fetching more data
+  const [offset, setOffset] = useState(0);
 
   useEffect(() => {
     fetchData();
@@ -24,7 +22,6 @@ const App = () => {
       .then((res) => res.json())
       .then((res) => {
         setInitLoading(false);
-        setData(res);
         setList(res);
       });
   };
@@ -46,11 +43,10 @@ const App = () => {
                     <Card.Grid key={item._id} style={{ width: '100%', textAlign: 'center' }}>
                       <Card title={item.name} extra={`Wallet Balance: ${item.walletBalance}`}>
                         <Skeleton avatar title={false} loading={item.loading} active>
-                          {/* Add more details about the user here if needed */}
                           <Link to={`/edit/${item._id}`}>
                             <Button type="primary">Edit</Button>
                           </Link>
-                          <Link to={`/transactions/${item.userId}`}>
+                          <Link to={`/transactions/${item._id}`}>
                             <Button type="default">More</Button>
                           </Link>
                         </Skeleton>
@@ -63,7 +59,7 @@ const App = () => {
           }
         />
         <Route path="/edit/:id" element={<EditPage />} />
-        <Route path="/transactions/:userId" element={<Transaction />} />
+        <Route path="/transactions/:id" element={<TransactionPage />} />
       </Routes>
     </Router>
   );

@@ -58,10 +58,18 @@ app.post('/users', async (req, res) => {
 });
 
 
+// Middleware for handling JSON data
+
+app.use(cors({
+  origin: 'http://localhost:3001',
+}));
+
+// Define a constant for the maximum adjustment amount
+const MAX_ADJUSTMENT_AMOUNT = 1000000; // You can adjust this value as needed
+
 app.post('/api/adjust-balance', async (req, res) => {
   try {
     const { userId, adjustmentAmount } = req.body;
-    console.log(adjustmentAmount)
 
     // Validate data types
     if (typeof userId !== 'string' || typeof adjustmentAmount !== 'number') {
@@ -76,13 +84,17 @@ app.post('/api/adjust-balance', async (req, res) => {
     }
 
     // Validate adjustment amount range
-    if (adjustmentAmount < -1000000 || adjustmentAmount > 1000000) {
+    if (adjustmentAmount < -MAX_ADJUSTMENT_AMOUNT || adjustmentAmount > MAX_ADJUSTMENT_AMOUNT) {
       return res.status(400).json({ error: 'Adjustment amount out of range' });
     }
 
-    // Assuming that a positive adjustmentAmount adds to the balance,
-    // and a negative adjustmentAmount deducts from the balance.
+    // Calculate the new balance
     const newBalance = user.walletBalance + adjustmentAmount;
+
+    // Check if the new balance would be negative for deductions
+    if (newBalance < 0) {
+      return res.status(400).json({ error: 'Insufficient balance for deduction' });
+    }
 
     // Update the user's wallet balance in the database
     user.walletBalance = newBalance;
@@ -90,9 +102,9 @@ app.post('/api/adjust-balance', async (req, res) => {
 
     // Create a new transaction record
     const transaction = new Transaction({
-      userId: user._id, // Reference to the user
+      userId: user._id,
       amount: adjustmentAmount,
-      type: 'adjustment', // You can define more transaction types if needed
+      type: 'adjustment',
     });
 
     // Save the transaction to the database
