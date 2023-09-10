@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './index.css';
-import { Avatar, Button, List, Skeleton } from 'antd';
+import { Avatar, Button, Card, List, Skeleton } from 'antd';
 
 const count = 3;
 const dataUrl = `http://localhost:3000/api/users`;
@@ -12,32 +12,39 @@ const App = () => {
   const [list, setList] = useState([]);
 
   useEffect(() => {
-    fetch(dataUrl) // Use the updated dataUrl
-      .then((res) => res.json())
-      .then((res) => {
-        setInitLoading(false);
-        setData(res);
-        setList(res);
-      });
+    const fetchData = async () => {
+      try {
+        const response = await fetch(dataUrl);
+        if (response.ok) {
+          const res = await response.json();
+          setInitLoading(false);
+          setData(res);
+          setList(res);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
   }, []);
 
-  const onLoadMore = () => {
+  const onLoadMore = async () => {
     setLoading(true);
-    setList(
-      data.concat([...new Array(count)].map(() => ({ loading: true, name: {}, picture: {} })))
-    );
-    fetch(dataUrl) // Use the updated dataUrl
-      .then((res) => res.json())
-      .then((res) => {
+    try {
+      const response = await fetch(dataUrl);
+      if (response.ok) {
+        const res = await response.json();
         const newData = data.concat(res);
         setData(newData);
         setList(newData);
         setLoading(false);
-        // Resetting window's offsetTop so as to display react-virtualized demo underfloor.
-        // In a real scene, you can use a public method of react-virtualized:
-        // https://stackoverflow.com/questions/46700726/how-to-use-public-method-updateposition-of-react-virtualized
+        // Resetting window's offsetTop for better UI experience
         window.dispatchEvent(new Event('resize'));
-      });
+      }
+    } catch (error) {
+      console.error('Error fetching more data:', error);
+    }
   };
 
   const loadMore =
@@ -50,32 +57,40 @@ const App = () => {
           lineHeight: '32px',
         }}
       >
-        <Button onClick={onLoadMore}>loading more</Button>
+        <Button onClick={onLoadMore}>Load More</Button>
       </div>
     ) : null;
 
   return (
-    <List
-      className="demo-loadmore-list"
-      loading={initLoading}
-      itemLayout="horizontal"
-      loadMore={loadMore}
-      dataSource={list}
-      renderItem={(item) => (
-        <List.Item
-          actions={[<a key="list-loadmore-edit">edit</a>, <a key="list-loadmore-more">more</a>]}
-        >
-          <Skeleton avatar title={false} loading={item.loading} active>
-            <List.Item.Meta
-              avatar={<Avatar src={item.picture.large} />}
-              title={<a href="https://ant.design">{item.name?.last}</a>}
-              description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-            />
-            <div>content</div>
-          </Skeleton>
-        </List.Item>
-      )}
-    />
+    <div>
+      <h1>User List</h1>
+      <List
+        className="demo-loadmore-list"
+        loading={initLoading}
+        itemLayout="horizontal"
+        loadMore={loadMore}
+        dataSource={list}
+        renderItem={(item) => (
+          <List.Item>
+            <Card>
+              <Skeleton avatar title={false} loading={item.loading} active>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <Avatar src={item.picture.large} />
+                    <span style={{ marginLeft: '8px' }}>{item.name?.last}</span>
+                  </div>
+                  <div>
+                    <span>Wallet Balance: {item.walletBalance}</span>
+                    <Button type="primary" style={{ marginLeft: '8px' }}>Edit</Button>
+                    <Button type="default" style={{ marginLeft: '8px' }}>More</Button>
+                  </div>
+                </div>
+              </Skeleton>
+            </Card>
+          </List.Item>
+        )}
+      />
+    </div>
   );
 };
 

@@ -42,3 +42,40 @@ code {
   margin-bottom: 0;
 }
 
+/* Add this to your index.css file */
+
+/* Style for the user list */
+.demo-loadmore-list {
+  margin-top: 20px;
+}
+
+/* Style for each user card */
+.demo-loadmore-list .ant-list-item {
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+/* Style for the user info container */
+.demo-loadmore-list .ant-list-item-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Style for user name and balance */
+.demo-loadmore-list .ant-list-item-meta-title {
+  display: flex;
+  align-items: center;
+}
+
+/* Style for buttons */
+.demo-loadmore-list .ant-list-item-meta-description {
+  display: flex;
+  align-items: center;
+}
+
+/* Add margin between buttons */
+.demo-loadmore-list .ant-btn {
+  margin-left: 8px;
+}

@@ -30,15 +30,21 @@ const TransactionPage = () => {
   }, [id]);
 
   return (
-    <div>
-      <h1>Transactions Page</h1>
-      <ul>
-        {transactions.map((transaction) => (
-          <li key={transaction._id}>
-            Transaction ID: {transaction._id}, Amount: {transaction.amount}
-          </li>
-        ))}
-      </ul>
+    <div className="container">
+      <h1 className="text-center mt-4 mb-4">Transactions Page</h1>
+      <div className="d-flex justify-content-center">
+        <div className="card">
+          <div className="card-body">
+            <ul className="list-group">
+              {transactions.map((transaction) => (
+                <li key={transaction._id} className="list-group-item">
+                  <strong>Date:</strong> {new Date(transaction.createdAt).toLocaleDateString()}, <strong>Amount:</strong> {transaction.amount}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
